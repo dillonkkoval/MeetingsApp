@@ -3,6 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"log"
 	"net/http"
