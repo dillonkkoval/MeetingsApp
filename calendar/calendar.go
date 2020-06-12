@@ -11,7 +11,7 @@ import (
 	"github.com/dillonkkoval/MeetingsApp/auth"
 )
 
-func readCalendar(who string){
+func ReadCalendar(who string){
 	b, err := ioutil.ReadFile(who+"-credentials.json")
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
