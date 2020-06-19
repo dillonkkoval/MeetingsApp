@@ -2,49 +2,42 @@ package calendar
 
 import (
 	"fmt"
+	"io/ioutil"
+	"time"
+
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
-	"io/ioutil"
-	"log"
-	"time"
 
 	"github.com/dillonkkoval/MeetingsApp/auth"
 )
 
-func ReadCalendar(who string){
-	b, err := ioutil.ReadFile(who+"-credentials.json")
+func GetCalendarService(credentials string) (*calendar.Service, error) {
+	b, err := ioutil.ReadFile(credentials)
 	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
+		return nil, fmt.Errorf("Unable to read client secret file: %w", err)
 	}
 
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
 	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
+		return nil, fmt.Errorf("Unable to parse client secret file to config: %w", err)
 	}
 	client := auth.GetClient(config)
 
 	srv, err := calendar.New(client)
 	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %v", err)
+		return nil, fmt.Errorf("Unable to retrieve Calendar client: %w", err)
 	}
+	return srv, nil
+}
 
+func ReadCalendar(service *calendar.Service) (*calendar.Events, error) {
 	t := time.Now().Format(time.RFC3339)
-	events, err := srv.Events.List("primary").ShowDeleted(false).
+	events, err := service.Events.List("primary").ShowDeleted(false).
 		SingleEvents(true).TimeMin(t).MaxResults(10).OrderBy("startTime").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
+		return nil, fmt.Errorf("Unable to retrieve next ten of the user's events: %w", err)
 	}
-	fmt.Println("Upcoming events:")
-	if len(events.Items) == 0 {
-		fmt.Println("No upcoming events found.")
-	} else {
-		for _, item := range events.Items {
-			date := item.Start.DateTime
-			if date == "" {
-				date = item.Start.Date
-			}
-			fmt.Printf("%v (%v)\n", item.Summary, date)
-		}
-	}
+
+	return events, nil
 }

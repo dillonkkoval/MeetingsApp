@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	JACK 	= "1"
-	STAIRS 	= "2"
-	DILLON 	= "3"
-	NICK 	= "4"
-	RED		= "0"
-	GREEN	= "20000"
-	YELLOW 	= "10000"
+	JACK   = "1"
+	STAIRS = "2"
+	DILLON = "3"
+	NICK   = "4"
+	RED    = "0"
+	GREEN  = "20000"
+	YELLOW = "10000"
 )
 
 func ChangeLight(lightNum string, color string) {
