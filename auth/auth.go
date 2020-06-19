@@ -12,11 +12,11 @@ import (
 )
 
 // Retrieve a token, saves the token, then returns the generated client.
-func GetClient(config *oauth2.Config) *http.Client {
+func GetClient(name string, config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
+	tokFile := name + "-token.json"
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)

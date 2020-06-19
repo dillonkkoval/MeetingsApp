@@ -11,7 +11,7 @@ import (
 	"github.com/dillonkkoval/MeetingsApp/auth"
 )
 
-func GetCalendarService(credentials string) (*calendar.Service, error) {
+func GetCalendarService(name, credentials string) (*calendar.Service, error) {
 	b, err := ioutil.ReadFile(credentials)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read client secret file: %w", err)
@@ -22,7 +22,7 @@ func GetCalendarService(credentials string) (*calendar.Service, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Unable to parse client secret file to config: %w", err)
 	}
-	client := auth.GetClient(config)
+	client := auth.GetClient(name, config)
 
 	srv, err := calendar.New(client)
 	if err != nil {
